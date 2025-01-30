@@ -31,9 +31,9 @@
         <div class="user-id-calendar-container">
             <!-- User ID GUI -->
             <div class="user-id">
-                <img src="user.jpg" alt="User Picture" class="user-picture">
+                <img src="UserImage/Master.png" alt="User Picture" class="user-picture">
                 <div class="user-info">
-                    <p class="user-name">Ivan Harvey Rivera</p>
+                    <p class="user-name">Caleb Steven A Lagunilla</p>
                     <p class="user-position">Software Engineer</p>
                     <p class="user-department">IT Department</p>
                 </div>

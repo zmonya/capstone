@@ -7,6 +7,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="stylesheet/style.css">
+    <link rel="script" href="scriptJS/script.js">
 </head>
 
 <body>
@@ -22,6 +23,36 @@
     <div class="top-nav">
         <h2>Dashboard</h2>
         <input type="text" placeholder="Search documents...">
+        <!-- Activity Log Icon -->
+        <i class="fas fa-history activity-log-icon" onclick="toggleActivityLog()"></i>
+    </div>
+
+    <!-- Activity Log Dropdown -->
+    <div class="activity-log" id="activityLog">
+        <h3>Activity Log</h3>
+        <div class="log-entries">
+            <div class="log-entry">
+                <i class="fas fa-hand-paper"></i> <!-- Icon for Requested -->
+                <p>Requested "Budget.xlsx"</p>
+                <span>08:45 AM</span>
+            </div>
+            <div class="log-entry">
+                <i class="fas fa-file-upload"></i>
+                <p>Uploaded "Report.pdf"</p>
+                <span>10:00 AM</span>
+            </div>
+            <div class="log-entry">
+                <i class="fas fa-file-download"></i>
+                <p>Downloaded "Proposal.docx"</p>
+                <span>09:30 AM</span>
+            </div>
+            <div class="log-entry">
+                <i class="fas fa-trash"></i>
+                <p>Deleted "Data.xlsx"</p>
+                <span>09:00 AM</span>
+            </div>
+
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -31,7 +62,7 @@
         <div class="user-id-calendar-container">
             <!-- User ID GUI -->
             <div class="user-id">
-                <img src="UserImage/Master.png" alt="User Picture" class="user-picture">
+                <img src="imageUser/master.png" alt="User Picture" class="user-picture">
                 <div class="user-info">
                     <p class="user-name">Caleb Steven A Lagunilla</p>
                     <p class="user-position">Software Engineer</p>
@@ -47,7 +78,7 @@
         </div>
 
 
-        <!-- Upload and Activity Log Container -->
+        <!-- Upload and notification Log Container -->
         <div class="upload-activity-container">
             <!-- Upload Section -->
             <div class="upload-file" id="upload">
@@ -58,33 +89,13 @@
                 </form>
             </div>
 
-            <!-- Activity Log Section -->
-            <div class="activity-log">
-                <h3>Activity Log</h3>
+            <!-- notification Log Section -->
+            <div class="notification-log">
+                <h3>Notification</h3>
                 <div class="log-entries">
-                    <!-- Existing Entries -->
-                    <div class="log-entry">
-                        <i class="fas fa-file-upload"></i>
-                        <p>Uploaded "Report.pdf"</p>
-                        <span>10:00 AM</span>
-                    </div>
-                    <div class="log-entry">
-                        <i class="fas fa-file-download"></i>
-                        <p>Downloaded "Proposal.docx"</p>
-                        <span>09:30 AM</span>
-                    </div>
-                    <div class="log-entry">
-                        <i class="fas fa-trash"></i>
-                        <p>Deleted "Data.xlsx"</p>
-                        <span>09:00 AM</span>
-                    </div>
+
 
                     <!-- New Entries -->
-                    <div class="log-entry">
-                        <i class="fas fa-hand-paper"></i> <!-- Icon for Requested -->
-                        <p>Requested "Budget.xlsx"</p>
-                        <span>08:45 AM</span>
-                    </div>
                     <div class="log-entry">
                         <i class="fas fa-check-circle"></i> <!-- Icon for Approved -->
                         <p>Approved "Project Plan.docx"</p>
@@ -95,6 +106,13 @@
                         <p>Denied "Expense Report.pdf"</p>
                         <span>08:15 AM</span>
                     </div>
+                    <div class="log-entry">
+                        <i class="fas fa-thumbs-up"></i> <!-- Icon for Approved Request -->
+                        <p>Request Approved "Audit Report.pdf"</p>
+                        <span>07:15 AM</span>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -127,7 +145,7 @@
                 </div>
                 <div class="category-item">
                     <i class="fas fa-cogs"></i>
-                    <p>College of Engineering and Technology</p>
+                 <a href="#"><p>College of Engineering and Technology</p></a>
                 </div>
                 <div class="category-item">
                     <i class="fas fa-paw"></i>
@@ -151,6 +169,8 @@
                 </div>
                 <div class="category-item">
                     <i class="fas fa-user-tie"></i>
+
+
                     <p>Office of the President</p>
                 </div>
             </div>
@@ -201,11 +221,107 @@
         </div>
     </div>
 
+
+
+
     <!-- Physical Details Popup -->
+
+
+    <?php
+// Include config file
+require_once "database/config.php";
+ 
+// Define variables and initialize with empty values
+$dep_college = $building = $office = $shelf = $document = "";
+$dep_college_err = $building_err = $office_err = $shelf_err = $document_err  = "";
+ 
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    // Validate Department/College
+
+    $input_dep_college = trim($_POST["dep_college"]);
+    if(empty($input_dep_college)){
+        $dep_college_err = "Please enter a Department/College.";
+    } elseif(!filter_var($input_dep_college, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
+        $dep_college_err = "Please enter a Department/College.";
+    } else{
+        $dep_college = $input_dep_college;
+    }
+    
+    // Validate Building
+    $input_building = trim($_POST["building"]);
+    if(empty($input_building)){
+        $building_err = "Please enter a Building.";     
+    } else{
+        $building = $input_building;
+    }
+
+       // Validate Office
+    $input_office = trim($_POST["office"]);
+    if(empty($input_office)){
+        $office_err = "Please enter a office.";     
+    } else{
+        $office = $input_office;
+    }
+    
+    
+       // Validate shelf
+    $input_shelf = trim($_POST["shelf"]);
+    if(empty($input_shelf)){
+        $shelf_err = "Please enter a shelf.";     
+    } else{
+        $shelf = $input_shelf;
+    }
+
+       // Validate document
+    $input_document = trim($_POST["document"]);
+    if(empty($input_document)){
+        $document_err = "Please enter a document.";     
+    } else{
+        $document = $input_document;
+    }
+    
+    // Check input errors before inserting in database
+    if(empty($dep_college_err) && empty($building_err) && empty($office_err) && empty($shelf_err) && empty($document_err)){
+        // Prepare an insert statement
+        $sql = "INSERT INTO document_upload (dep_college, building, office, shelf, document) VALUES (?, ?, ?, ?, ?)";
+         
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "sssss", $param_dep_college, $param_building, $param_office, $param_shelf, $param_document);
+            
+            // Set parameters
+            $param_dep_college = $dep_college;
+            $param_building = $building;
+            $param_office = $office;
+            $param_shelf = $shelf;
+            $param_document = $document;
+            
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                // Records created successfully. Redirect to landing page
+                header("location: index1.php");
+                exit();
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+        }
+         
+        // Close statement
+        mysqli_stmt_close($stmt);
+    }
+    
+    // Close connection
+    mysqli_close($link);
+}
+?>
+
     <div class="popup-questionnaire" id="physicalDetailsPopup" style="display: none;">
         <button class="exit-button" onclick="closePopup('physicalDetailsPopup')">X</button>
         <h3>Provide Physical Copy Details</h3>
-        <form id="physicalDetailsForm">
+
+<!--         <form id="physicalDetailsForm">
             <label for="department">Department/College:</label>
             <input type="text" id="department" name="department" required>
 
@@ -219,81 +335,40 @@
             <input type="text" id="shelf" name="shelf" required>
 
             <button type="submit" class="submit-button">Submit</button>
+        </form> -->
+
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group">
+                <label>Department/College:</label>
+                <input type="text" name="dep_college" class="form-control <?php echo (!empty($dep_college_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $dep_college; ?>">
+                <span class="invalid-feedback"><?php echo $dep_college_err;?></span>
+            </div>
+            <div class="form-group">
+                <label>Building:</label>
+                <input type="text" name="building" class="form-control <?php echo (!empty($building_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $building; ?>">
+                <span class="invalid-feedback"><?php echo $building_err;?></span>
+            </div>
+            <div class="form-group">
+                <label>Office:</label>
+                <input type="text" name="office" class="form-control <?php echo (!empty($office_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $office; ?>">
+                <span class="invalid-feedback"><?php echo $office_err;?></span>
+            </div>
+            <div class="form-group">
+                <label>Shelf:</label>
+                <input type="text" name="shelf" class="form-control <?php echo (!empty($shelf_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $shelf; ?>">
+                <span class="invalid-feedback"><?php echo $shelf_err;?></span>
+            </div>
+            <button type="submit
+            
+            
+            " class="submit-button">Submit</button>
+            <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
         </form>
+
     </div>
 
     <!-- Scripts -->
-    <script>
-        function updateDateTime() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            const currentDate = now.toLocaleDateString('en-US', options);
-            const currentTime = now.toLocaleTimeString('en-US');
-
-            document.getElementById('currentDate').textContent = currentDate;
-            document.getElementById('currentTime').textContent = currentTime;
-        }
-
-        // Update the date and time every second
-        setInterval(updateDateTime, 1000);
-
-        // Initial call to display the date and time immediately
-        updateDateTime();
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const uploadButton = document.getElementById("uploadButton");
-            const physicalCopyPopup = document.getElementById("physicalCopyPopup");
-            const fileErrorPopup = document.getElementById("fileErrorPopup");
-            const yesPhysical = document.getElementById("yesPhysical");
-            const noPhysical = document.getElementById("noPhysical");
-            const exitButtons = document.querySelectorAll(".exit-button");
-
-            // Show the first popup when "Upload" button is clicked
-            uploadButton.addEventListener("click", function() {
-                const fileInput = document.getElementById("document");
-
-                if (fileInput.files.length === 0) {
-                    fileErrorPopup.style.display = "block"; // Show error popup
-                } else {
-                    physicalCopyPopup.style.display = "block"; // Proceed to physical copy popup
-                }
-            });
-
-            // Show the details popup when "Yes" is clicked
-            yesPhysical.addEventListener("click", function() {
-                physicalCopyPopup.style.display = "none";
-                document.getElementById("physicalDetailsPopup").style.display = "block";
-            });
-
-            // Hide all popups when "No" is clicked
-            noPhysical.addEventListener("click", function() {
-                physicalCopyPopup.style.display = "none";
-                document.getElementById("uploadForm").submit();
-            });
-
-            // Close any popup when the exit button is clicked
-            exitButtons.forEach(button => {
-                button.addEventListener("click", function() {
-                    this.parentElement.style.display = "none";
-                });
-            });
-
-            // Ensure file selection enables upload button
-            document.getElementById("document").addEventListener("change", function() {
-                uploadButton.style.display = "inline-block";
-            });
-        });
-
-        function closePopup(id) {
-            document.getElementById(id).style.display = "none";
-        }
-    </script>
+ 
 
 
 </body>

@@ -10,7 +10,8 @@ session_start();
     <title>My Documents</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="stylesheet/style2.css">
+    <link rel="stylesheet" href="stylesheet/style.css">
+    <link rel="script" href="scriptJS/script.js">
 </head>
 
 <body>
@@ -117,61 +118,7 @@ session_start();
         </form>
     </div>
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const uploadButton = document.getElementById("uploadButton");
-            const physicalCopyPopup = document.getElementById("physicalCopyPopup");
-            const fileErrorPopup = document.getElementById("fileErrorPopup");
-            const yesPhysical = document.getElementById("yesPhysical");
-            const noPhysical = document.getElementById("noPhysical");
-            const exitButtons = document.querySelectorAll(".exit-button");
 
-            // Show the first popup when "Upload" button is clicked
-            uploadButton.addEventListener("click", function() {
-                const fileInput = document.getElementById("document");
-
-                if (fileInput.files.length === 0) {
-                    fileErrorPopup.style.display = "block"; // Show error popup
-                } else {
-                    physicalCopyPopup.style.display = "block"; // Proceed to physical copy popup
-                }
-            });
-
-            // Show the details popup when "Yes" is clicked
-            yesPhysical.addEventListener("click", function() {
-                physicalCopyPopup.style.display = "none";
-                document.getElementById("physicalDetailsPopup").style.display = "block";
-            });
-
-            // Hide all popups when "No" is clicked
-            noPhysical.addEventListener("click", function() {
-                physicalCopyPopup.style.display = "none";
-                document.getElementById("uploadForm").submit();
-            });
-
-            // Close any popup when the exit button is clicked
-            exitButtons.forEach(button => {
-                button.addEventListener("click", function() {
-                    this.parentElement.style.display = "none";
-                });
-            });
-
-            // Ensure file selection enables upload button
-            document.getElementById("document").addEventListener("change", function() {
-                uploadButton.style.display = "inline-block";
-            });
-        });
-
-        function toggleRecentFiles() {
-            const recentFiles = document.querySelector('.recent-files-section');
-            recentFiles.classList.toggle('hidden');
-        }
-
-        function toggleRightSidebar() {
-            document.getElementById('rightSidebar').classList.toggle('active');
-        }
-    </script>
 </body>
 
 </html>

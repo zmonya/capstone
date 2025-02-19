@@ -13,8 +13,9 @@
   </style>
 </head>
 <body>
-  <h1>Hello dev! 👌</h1>
+  <h1>Welcome Home Page</h1>
   <p>Edit Me please</p>
-  <a href="./views/home.php" >Navigate to Home Page</a>
+  <a href="../" >Navigate to rootfile</a>
 </body>
 </html>
+  
